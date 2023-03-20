@@ -9,7 +9,7 @@ This project adds enhancements to improve logging in go services. Service based 
 
 ## Usage
 
-```
+```go
 package main
 
 import (

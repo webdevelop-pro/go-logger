@@ -8,6 +8,7 @@ import (
 	"github.com/rs/zerolog/pkgerrors"
 
 	"github.com/webdevelop-pro/go-common/configurator"
+	"github.com/webdevelop-pro/go-common/verser"
 )
 
 func init() {
@@ -17,6 +18,46 @@ func init() {
 // Printf is implementation of fx.Printer
 func (l Logger) Printf(s string, args ...interface{}) {
 	l.Info().Msgf(s, args...)
+}
+
+type DefaultLogger struct {
+	Context Context
+}
+
+func (df DefaultLogger) ServiceContext() ServiceContext {
+	serviceCtx := ServiceContext{}
+	if service := verser.GetService(); service != "" {
+		serviceCtx.Service = service
+	}
+
+	if version := verser.GetVersion(); version != "" {
+		serviceCtx.Version = version
+	}
+
+	repository := verser.GetRepository()
+	revisionID := verser.GetRevisionID()
+	if repository != "" || revisionID != "" {
+		serviceCtx.SourceReference = &SourceReference{
+			Repository: repository,
+			RevisionID: revisionID,
+		}
+	}
+
+	if df.Context != nil {
+		if user := df.Context.Get("user"); user != nil {
+			serviceCtx.User = user.(string)
+		}
+	}
+	return serviceCtx
+}
+
+func (df DefaultLogger) Run(e *zerolog.Event, level zerolog.Level, s string) {
+	switch level {
+	case zerolog.ErrorLevel, zerolog.FatalLevel, zerolog.PanicLevel:
+		if df.Context != nil {
+			e.Interface("serviceContext", df.ServiceContext())
+		}
+	}
 }
 
 // NewLogger return logger instance
@@ -30,6 +71,7 @@ func NewLogger(component string, logLevel string, output io.Writer, c Context) L
 		New(output).
 		Level(level).
 		Hook(SeverityHook{}).
+		Hook(DefaultLogger{Context: c}).
 		With().Stack().Timestamp()
 
 	// if level == zerolog.DebugLevel || level == zerolog.TraceLevel {

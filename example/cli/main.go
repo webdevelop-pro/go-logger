@@ -1,9 +1,6 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 
 	"github.com/webdevelop-pro/go-common/verser"
@@ -26,15 +23,6 @@ var (
 type Context struct {
 }
 
-func (ctx Context) RealIP() string {
-	return ""
-}
-func (ctx Context) Response() *echo.Response {
-	return nil
-}
-func (ctx Context) Request() *http.Request {
-	return nil
-}
 func (ctx Context) Get(key string) interface{} {
 	if key == "user" {
 		return "user-uuid"

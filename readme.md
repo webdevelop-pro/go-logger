@@ -79,11 +79,12 @@ Will output
       "source": "asm_arm64.s"
     }
   ],
-  "error": "some error",
+  "error": "user id: 123 not found in user_users",
   "severity": "ERROR",
   "serviceContext": {
-    "service": "",
-    "version": "",
+    "service": "hello-world",
+    "version": "1.2.3-git-sha256",
+    "user": "123123",
     "httpRequest": {
       "method": "GET",
       "url": "/",
@@ -95,11 +96,17 @@ Will output
   },
   "@type": "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent",
   "time": "2023-03-20T18:08:42+01:00",
-  "message": "log message with stack trace and context"
+  "message": "row not found"
 }
 ```
 
 #### Notes
+Key error elements:
+- `level` and `severity`: error level
+- `message`: generic error message, i.e. row now found
+- `err`: detail error message, i.e. element 123 not found in database
+- `component`: name of the component
+- `serviceContext`: service information, including user id and request info
 
 
 ### Config

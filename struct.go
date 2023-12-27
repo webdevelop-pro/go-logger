@@ -1,22 +1,11 @@
 package logger
 
 import (
-	"net/http"
-
-	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog"
 )
 
 // Context is default context for the web request and response
 type Context interface {
-	// Request returns `*http.Request`.
-	Request() *http.Request
-
-	// Response returns `*Response`.
-	Response() *echo.Response
-
-	RealIP() string
-
 	// Get retrieves data from the context.
 	Get(key string) interface{}
 }

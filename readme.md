@@ -89,7 +89,7 @@ Will output
       "url": "/",
       "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
       "referrer": "",
-      "responseStatusCode": 0,
+      "responseStatusCode": 200,
       "remoteIp": "127.0.0.1:62312"
     }
   },

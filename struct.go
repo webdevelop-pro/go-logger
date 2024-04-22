@@ -24,6 +24,8 @@ type ServiceContext struct {
 	Service         string              `json:"service"`
 	Version         string              `json:"version"`
 	User            string              `json:"user,omitempty"`
+	RequestID       string              `json:"request_id,omitempty"`
+	MSGID           string              `json:"msg_id,omitempty"`
 	HttpRequest     *HttpRequestContext `json:"httpRequest,omitempty"`
 	SourceReference *SourceReference    `json:"sourceReference,omitempty"`
 }

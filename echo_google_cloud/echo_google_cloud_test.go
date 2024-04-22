@@ -43,9 +43,11 @@ func testLog(t *testing.T, ctx context.Context, expected string, logF func(log l
 
 func TestLog_Info(t *testing.T) {
 	ctx := context.WithValue(context.Background(), logger.ServiceContextInfo, logger.ServiceContext{
-		Service: "test-service",
-		Version: "v0.1",
-		User:    "0001",
+		Service:   "test-service",
+		Version:   "v0.1",
+		User:      "0001",
+		RequestID: "asd-asd-asd",
+		MSGID:     "ttt-tttt-ttt",
 		HttpRequest: &logger.HttpRequestContext{
 			Method:             "GET",
 			URL:                "/test",
@@ -66,6 +68,8 @@ func TestLog_Info(t *testing.T) {
 				"service": "test-service",
 				"version": "v0.1",
 				"user": "0001",
+				"request_id": "asd-asd-asd",
+				"msg_id": "ttt-tttt-ttt",
 				"httpRequest": {
 					"method": "GET",
 					"url": "/test",
@@ -87,9 +91,11 @@ func TestLog_Info(t *testing.T) {
 
 func TestLog_ErrorWithoutStack(t *testing.T) {
 	ctx := context.WithValue(context.Background(), logger.ServiceContextInfo, logger.ServiceContext{
-		Service: "test-service",
-		Version: "v0.1",
-		User:    "0001",
+		Service:   "test-service",
+		Version:   "v0.1",
+		User:      "0001",
+		RequestID: "asd-asd-asd",
+		MSGID:     "ttt-tttt-ttt",
 		HttpRequest: &logger.HttpRequestContext{
 			Method:             "GET",
 			URL:                "/test",
@@ -110,6 +116,8 @@ func TestLog_ErrorWithoutStack(t *testing.T) {
 				"service": "test-service",
 				"version": "v0.1",
 				"user": "0001",
+				"request_id": "asd-asd-asd",
+				"msg_id": "ttt-tttt-ttt",
 				"httpRequest": {
 					"method": "GET",
 					"url": "/test",
@@ -131,9 +139,11 @@ func TestLog_ErrorWithoutStack(t *testing.T) {
 
 func TestLog_ErrorWithStack(t *testing.T) {
 	ctx := context.WithValue(context.Background(), logger.ServiceContextInfo, logger.ServiceContext{
-		Service: "test-service",
-		Version: "v0.1",
-		User:    "0001",
+		Service:   "test-service",
+		Version:   "v0.1",
+		User:      "0001",
+		RequestID: "asd-asd-asd",
+		MSGID:     "ttt-tttt-ttt",
 		HttpRequest: &logger.HttpRequestContext{
 			Method:             "GET",
 			URL:                "/test",
@@ -153,7 +163,7 @@ func TestLog_ErrorWithStack(t *testing.T) {
 			"stack": [
 				{
 					"func": "TestLog_ErrorWithStack",
-					"line": "147",
+					"line": "157",
 					"source": "echo_google_cloud_test.go"
 				},
 				{
@@ -173,6 +183,8 @@ func TestLog_ErrorWithStack(t *testing.T) {
 				"service": "test-service",
 				"version": "v0.1",
 				"user": "0001",
+				"request_id": "asd-asd-asd",
+				"msg_id": "ttt-tttt-ttt",
 				"httpRequest": {
 					"method": "GET",
 					"url": "/test",

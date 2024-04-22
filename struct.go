@@ -4,6 +4,10 @@ import (
 	"github.com/rs/zerolog"
 )
 
+const (
+	ServiceContextInfo = "service_context_info"
+)
+
 // Context is default context for the web request and response
 type Context interface {
 	// Get retrieves data from the context.

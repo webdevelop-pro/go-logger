@@ -30,7 +30,7 @@ func main() {
   e.GET("/", func(c echo.Context) error {
     err := errorFunc()
     log := logger.NewComponentLogger("get-func", e) // logger with get request context
-    log.Error().Stack().Err(err).Msg("error while getting element with id 123")
+    log.Error().Ctx(ctx).Stack().Err(err).Msg("error while getting element with id 123")
     return c.String(http.StatusOK, "Hello, World!")
   })
   defaultLogger.Fatal.Err(e.Start(":1323")).Msg("server went down")

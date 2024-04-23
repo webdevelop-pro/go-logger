@@ -84,8 +84,9 @@ func NewEchoGCLogger(component string, logLevel string, output io.Writer, c echo
 		New(output).
 		Level(level).
 		Hook(logger.SeverityHook{}).
+		Hook(logger.ContextHook{}).
 		Hook(EchoGoogleCloud{reqContext: c, skip: !skipGoogleHook}).
-		With().Stack().Timestamp()
+		With().Timestamp()
 
 	// if level == zerolog.DebugLevel || level == zerolog.TraceLevel {
 	// l = l.Caller()

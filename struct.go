@@ -4,6 +4,10 @@ import (
 	"github.com/rs/zerolog"
 )
 
+const (
+	ServiceContextInfo = "service_context_info"
+)
+
 // Context is default context for the web request and response
 type Context interface {
 	// Get retrieves data from the context.
@@ -20,6 +24,8 @@ type ServiceContext struct {
 	Service         string              `json:"service"`
 	Version         string              `json:"version"`
 	User            string              `json:"user,omitempty"`
+	RequestID       string              `json:"request_id,omitempty"`
+	MSGID           string              `json:"msg_id,omitempty"`
 	HttpRequest     *HttpRequestContext `json:"httpRequest,omitempty"`
 	SourceReference *SourceReference    `json:"sourceReference,omitempty"`
 }

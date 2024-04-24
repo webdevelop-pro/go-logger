@@ -1,13 +1,12 @@
 package echo_google_cloud
 
 import (
+	"context"
 	"io"
 	"os"
 
-	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog"
 	"github.com/webdevelop-pro/go-common/configurator"
-	"github.com/webdevelop-pro/go-common/verser"
 	logger "github.com/webdevelop-pro/go-logger"
 )
 
@@ -17,44 +16,7 @@ const (
 )
 
 type EchoGoogleCloud struct {
-	skip       bool
-	reqContext echo.Context
-}
-
-func (h EchoGoogleCloud) echoContextToServiceContext() logger.ServiceContext {
-	serviceCtx := logger.ServiceContext{
-		HttpRequest: &logger.HttpRequestContext{
-			Method:             h.reqContext.Request().Method,
-			URL:                h.reqContext.Request().URL.String(),
-			UserAgent:          h.reqContext.Request().UserAgent(),
-			Referrer:           h.reqContext.Request().Referer(),
-			RemoteIp:           h.reqContext.Request().RemoteAddr,
-			ResponseStatusCode: h.reqContext.Response().Status,
-		},
-	}
-	if service := verser.GetService(); service != "" {
-		serviceCtx.Service = service
-	}
-
-	if version := verser.GetVersion(); version != "" {
-		serviceCtx.Version = version
-	}
-
-	repository := verser.GetRepository()
-	revisionID := verser.GetRevisionID()
-	if repository != "" || revisionID != "" {
-		serviceCtx.SourceReference = &logger.SourceReference{
-			Repository: repository,
-			RevisionID: revisionID,
-		}
-	}
-
-	if h.reqContext != nil {
-		if user := h.reqContext.Get("user"); user != nil {
-			serviceCtx.User = user.(string)
-		}
-	}
-	return serviceCtx
+	skip bool
 }
 
 func (h EchoGoogleCloud) Run(e *zerolog.Event, level zerolog.Level, s string) {
@@ -64,15 +26,12 @@ func (h EchoGoogleCloud) Run(e *zerolog.Event, level zerolog.Level, s string) {
 
 	switch level {
 	case zerolog.ErrorLevel, zerolog.FatalLevel, zerolog.PanicLevel:
-		if h.reqContext != nil {
-			e.Interface("serviceContext", h.echoContextToServiceContext())
-		}
 		e.Str(errorTypeKey, errorTypeValue)
 	}
 }
 
 // NewLogger return logger instance
-func NewEchoGCLogger(component string, logLevel string, output io.Writer, c echo.Context) logger.Logger {
+func NewEchoGCLogger(component string, logLevel string, output io.Writer, c context.Context) logger.Logger {
 	level, err := zerolog.ParseLevel(logLevel)
 	if err != nil {
 		level = zerolog.InfoLevel
@@ -85,7 +44,7 @@ func NewEchoGCLogger(component string, logLevel string, output io.Writer, c echo
 		Level(level).
 		Hook(logger.SeverityHook{}).
 		Hook(logger.ContextHook{}).
-		Hook(EchoGoogleCloud{reqContext: c, skip: !skipGoogleHook}).
+		Hook(EchoGoogleCloud{skip: !skipGoogleHook}).
 		With().Timestamp()
 
 	// if level == zerolog.DebugLevel || level == zerolog.TraceLevel {
@@ -94,6 +53,10 @@ func NewEchoGCLogger(component string, logLevel string, output io.Writer, c echo
 
 	if component != "" {
 		l = l.Str("component", component)
+	}
+
+	if c != nil {
+		l = l.Ctx(c)
 	}
 
 	if err != nil {
@@ -105,12 +68,12 @@ func NewEchoGCLogger(component string, logLevel string, output io.Writer, c echo
 }
 
 // DefaultStdoutLogger return default logger instance
-func DefaultStdoutLogger(logLevel string, c echo.Context) logger.Logger {
+func DefaultStdoutLogger(logLevel string, c context.Context) logger.Logger {
 	return NewEchoGCLogger("default", logLevel, os.Stdout, c)
 }
 
 // NewComponentLogger return default logger instance with custom component
-func NewComponentLogger(component string, c echo.Context) logger.Logger {
+func NewComponentLogger(component string, c context.Context) logger.Logger {
 	conf := configurator.NewConfigurator()
 	cfg := conf.New("logger", &logger.Config{}).(*logger.Config)
 

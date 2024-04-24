@@ -1,4 +1,4 @@
-package echo_google_cloud
+package tests
 
 import (
 	"bytes"
@@ -11,6 +11,7 @@ import (
 
 	"github.com/webdevelop-pro/go-common/tests"
 	logger "github.com/webdevelop-pro/go-logger"
+	echo_google_cloud "github.com/webdevelop-pro/go-logger/echo_google_cloud"
 )
 
 func ReadStdout(r *os.File, w *os.File) string {
@@ -46,7 +47,7 @@ func testBaseLogger(t *testing.T, ctx context.Context, expected string, logF fun
 	os.Stdout = w
 
 	os.Setenv("LOG_LEVEL", "info")
-	log := NewComponentLogger("test", ctx)
+	log := echo_google_cloud.NewComponentLogger("test", ctx)
 
 	logF(log)
 
@@ -201,8 +202,8 @@ func TestLog_ErrorWithStack(t *testing.T) {
 			"stack": [
 				{
 					"func": "TestLog_ErrorWithStack",
-					"line": "195",
-					"source": "echo_google_cloud_test.go"
+					"line": "196",
+					"source": "loggers_test.go"
 				},
 				{
 					"func": "tRunner",

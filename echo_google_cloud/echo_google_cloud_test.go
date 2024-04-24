@@ -27,12 +27,26 @@ func ReadStdout(r *os.File, w *os.File) string {
 	return out
 }
 
-func testLog(t *testing.T, ctx context.Context, expected string, logF func(log logger.Logger)) {
+func testEchoLogger(t *testing.T, ctx context.Context, expected string, logF func(log logger.Logger)) {
 	r, w, _ := os.Pipe()
 	os.Stdout = w
 
 	os.Setenv("LOG_LEVEL", "info")
-	log := NewComponentLogger("test", nil)
+	log := logger.NewComponentLogger("test", ctx)
+
+	logF(log)
+
+	actual := ReadStdout(r, w)
+
+	tests.CompareJsonBody(t, []byte(actual), []byte(expected))
+}
+
+func testBaseLogger(t *testing.T, ctx context.Context, expected string, logF func(log logger.Logger)) {
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	os.Setenv("LOG_LEVEL", "info")
+	log := NewComponentLogger("test", ctx)
 
 	logF(log)
 
@@ -84,8 +98,20 @@ func TestLog_Info(t *testing.T) {
 		}
 	`
 
-	testLog(t, ctx, expected, func(log logger.Logger) {
+	testBaseLogger(t, nil, expected, func(log logger.Logger) {
 		log.Info().Ctx(ctx).Str("info", "details").Msg("test message")
+	})
+
+	testBaseLogger(t, ctx, expected, func(log logger.Logger) {
+		log.Info().Str("info", "details").Msg("test message")
+	})
+
+	testEchoLogger(t, nil, expected, func(log logger.Logger) {
+		log.Info().Ctx(ctx).Str("info", "details").Msg("test message")
+	})
+
+	testEchoLogger(t, ctx, expected, func(log logger.Logger) {
+		log.Info().Str("info", "details").Msg("test message")
 	})
 }
 
@@ -132,8 +158,20 @@ func TestLog_ErrorWithoutStack(t *testing.T) {
 		}
 	`
 
-	testLog(t, ctx, expected, func(log logger.Logger) {
+	testBaseLogger(t, nil, expected, func(log logger.Logger) {
 		log.Error().Ctx(ctx).Err(errors.New("some critical error")).Msg("test message")
+	})
+
+	testBaseLogger(t, ctx, expected, func(log logger.Logger) {
+		log.Error().Err(errors.New("some critical error")).Msg("test message")
+	})
+
+	testEchoLogger(t, nil, expected, func(log logger.Logger) {
+		log.Error().Ctx(ctx).Err(errors.New("some critical error")).Msg("test message")
+	})
+
+	testEchoLogger(t, ctx, expected, func(log logger.Logger) {
+		log.Error().Err(errors.New("some critical error")).Msg("test message")
 	})
 }
 
@@ -163,7 +201,7 @@ func TestLog_ErrorWithStack(t *testing.T) {
 			"stack": [
 				{
 					"func": "TestLog_ErrorWithStack",
-					"line": "157",
+					"line": "195",
 					"source": "echo_google_cloud_test.go"
 				},
 				{
@@ -199,7 +237,19 @@ func TestLog_ErrorWithStack(t *testing.T) {
 		}
 	`
 
-	testLog(t, ctx, expected, func(log logger.Logger) {
+	testBaseLogger(t, nil, expected, func(log logger.Logger) {
 		log.Error().Ctx(ctx).Stack().Err(err).Msg("test message")
+	})
+
+	testBaseLogger(t, ctx, expected, func(log logger.Logger) {
+		log.Error().Stack().Err(err).Msg("test message")
+	})
+
+	testEchoLogger(t, nil, expected, func(log logger.Logger) {
+		log.Error().Ctx(ctx).Stack().Err(err).Msg("test message")
+	})
+
+	testEchoLogger(t, ctx, expected, func(log logger.Logger) {
+		log.Error().Stack().Err(err).Msg("test message")
 	})
 }

@@ -8,12 +8,6 @@ const (
 	ServiceContextInfo = "service_context_info"
 )
 
-// Context is default context for the web request and response
-type Context interface {
-	// Get retrieves data from the context.
-	Get(key string) interface{}
-}
-
 // Logger is wrapper struct around logger.Logger that adds some custom functionality
 type Logger struct {
 	zerolog.Logger

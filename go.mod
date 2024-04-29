@@ -1,6 +1,6 @@
 module github.com/webdevelop-pro/go-logger
 
-go 1.21
+go 1.22
 
 toolchain go1.22.2
 
@@ -8,7 +8,7 @@ require (
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.32.0
-	github.com/webdevelop-pro/go-common v0.0.0-20240422164805-58de100e154b
+	github.com/webdevelop-pro/go-common v0.0.0-20240429142101-3749f4b6542d
 	go.uber.org/fx v1.21.0
 )
 

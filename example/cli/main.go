@@ -1,8 +1,10 @@
+//nolint:gochecknoglobals
 package main
 
 import (
-	"github.com/pkg/errors"
+	"context"
 
+	"github.com/pkg/errors"
 	"github.com/webdevelop-pro/go-common/verser"
 	logger "github.com/webdevelop-pro/go-logger"
 )
@@ -10,7 +12,7 @@ import (
 var ErrNotFound = errors.New("row not found")
 
 func FindUser() error {
-	return errors.Errorf("%s: %d", ErrNotFound, 123)
+	return ErrNotFound
 }
 
 var (
@@ -20,8 +22,7 @@ var (
 	revisionID string
 )
 
-type Context struct {
-}
+type Context struct{}
 
 func (ctx Context) Get(key string) interface{} {
 	if key == "user" {
@@ -32,8 +33,8 @@ func (ctx Context) Get(key string) interface{} {
 
 func main() {
 	verser.SetServiVersRepoRevis(service, version, repository, revisionID)
-	ctx := Context{}
-	defaultLogger := logger.NewComponentLogger("main-cli", ctx)
+	ctx := context.Background()
+	defaultLogger := logger.NewComponentLogger(ctx, "main-cli")
 	err := FindUser()
 	defaultLogger.Error().Stack().Err(err).Msg(ErrNotFound.Error())
 }

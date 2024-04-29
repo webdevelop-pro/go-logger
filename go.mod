@@ -9,7 +9,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.32.0
 	github.com/webdevelop-pro/go-common v0.0.0-20240429142101-3749f4b6542d
-	go.uber.org/fx v1.21.0
+	go.uber.org/fx v1.21.1
 )
 
 require (

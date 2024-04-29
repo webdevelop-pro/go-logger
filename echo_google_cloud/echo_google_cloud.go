@@ -1,4 +1,4 @@
-package echo_google_cloud
+package echogooglecloud
 
 import (
 	"context"
@@ -19,7 +19,7 @@ type EchoGoogleCloud struct {
 	skip bool
 }
 
-func (h EchoGoogleCloud) Run(e *zerolog.Event, level zerolog.Level, s string) {
+func (h EchoGoogleCloud) Run(e *zerolog.Event, level zerolog.Level, _ string) {
 	if h.skip {
 		return
 	}
@@ -27,11 +27,12 @@ func (h EchoGoogleCloud) Run(e *zerolog.Event, level zerolog.Level, s string) {
 	switch level {
 	case zerolog.ErrorLevel, zerolog.FatalLevel, zerolog.PanicLevel:
 		e.Str(errorTypeKey, errorTypeValue)
+	case zerolog.DebugLevel, zerolog.InfoLevel, zerolog.WarnLevel, zerolog.NoLevel, zerolog.Disabled, zerolog.TraceLevel:
 	}
 }
 
 // NewLogger return logger instance
-func NewEchoGCLogger(component string, logLevel string, output io.Writer, c context.Context) logger.Logger {
+func NewEchoGCLogger(c context.Context, component string, logLevel string, output io.Writer) logger.Logger {
 	level, err := zerolog.ParseLevel(logLevel)
 	if err != nil {
 		level = zerolog.InfoLevel
@@ -64,18 +65,21 @@ func NewEchoGCLogger(component string, logLevel string, output io.Writer, c cont
 		ll.Error().Err(err).Interface("level", logLevel).Msg("cannot parse log level, using default info")
 	}
 
-	return logger.Logger{l.Logger()}
+	return logger.Logger{Logger: l.Logger()}
 }
 
 // DefaultStdoutLogger return default logger instance
-func DefaultStdoutLogger(logLevel string, c context.Context) logger.Logger {
-	return NewEchoGCLogger("default", logLevel, os.Stdout, c)
+func DefaultStdoutLogger(c context.Context, logLevel string) logger.Logger {
+	return NewEchoGCLogger(c, "default", logLevel, os.Stdout)
 }
 
 // NewComponentLogger return default logger instance with custom component
-func NewComponentLogger(component string, c context.Context) logger.Logger {
-	conf := configurator.NewConfigurator()
-	cfg := conf.New("logger", &logger.Config{}).(*logger.Config)
+func NewComponentLogger(c context.Context, component string) logger.Logger {
+	cfg := logger.Config{}
+	err := configurator.NewConfiguration(&cfg, "logger")
+	if err != nil {
+		panic("Cannot parse config")
+	}
 
 	var output io.Writer
 	// Beautiful output
@@ -85,5 +89,5 @@ func NewComponentLogger(component string, c context.Context) logger.Logger {
 		output = os.Stdout
 	}
 
-	return NewEchoGCLogger(component, cfg.LogLevel, output, c)
+	return NewEchoGCLogger(c, component, cfg.LogLevel, output)
 }

@@ -64,13 +64,13 @@ func TestLog_Info(t *testing.T) {
 		User:      "0001",
 		RequestID: "asd-asd-asd",
 		MSGID:     "ttt-tttt-ttt",
-		HttpRequest: &logger.HttpRequestContext{
+		HTTPRequest: &logger.HTTPRequestContext{
 			Method:             "GET",
 			URL:                "/test",
 			UserAgent:          "testagent",
 			Referrer:           "testReferrer",
 			ResponseStatusCode: 200,
-			RemoteIp:           "0.0.0.0",
+			RemoteIP:           "0.0.0.0",
 		},
 	})
 
@@ -124,13 +124,13 @@ func TestLog_ErrorWithoutStack(t *testing.T) {
 		User:      "0001",
 		RequestID: "asd-asd-asd",
 		MSGID:     "ttt-tttt-ttt",
-		HttpRequest: &logger.HttpRequestContext{
+		HTTPRequest: &logger.HTTPRequestContext{
 			Method:             "GET",
 			URL:                "/test",
 			UserAgent:          "testagent",
 			Referrer:           "testReferrer",
 			ResponseStatusCode: 200,
-			RemoteIp:           "0.0.0.0",
+			RemoteIP:           "0.0.0.0",
 		},
 	})
 
@@ -184,13 +184,13 @@ func TestLog_ErrorWithStack(t *testing.T) {
 		User:      "0001",
 		RequestID: "asd-asd-asd",
 		MSGID:     "ttt-tttt-ttt",
-		HttpRequest: &logger.HttpRequestContext{
+		HTTPRequest: &logger.HTTPRequestContext{
 			Method:             "GET",
 			URL:                "/test",
 			UserAgent:          "testagent",
 			Referrer:           "testReferrer",
 			ResponseStatusCode: 200,
-			RemoteIp:           "0.0.0.0",
+			RemoteIP:           "0.0.0.0",
 		},
 	})
 

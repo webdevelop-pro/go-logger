@@ -1,11 +1,12 @@
+//nolint:gochecknoglobals
 package main
 
 import (
+	"context"
 	"net/http"
 
-	"github.com/pkg/errors"
-
 	"github.com/labstack/echo/v4"
+	"github.com/pkg/errors"
 	"github.com/webdevelop-pro/go-common/verser"
 	logger "github.com/webdevelop-pro/go-logger/echo_google_cloud"
 )
@@ -13,7 +14,7 @@ import (
 var ErrNotFound = errors.New("row not found")
 
 func FindUser() error {
-	return errors.Errorf("%s: %d", ErrNotFound, 123)
+	return errors.Errorf("%s: %s", ErrNotFound, "123")
 }
 
 var (
@@ -26,11 +27,11 @@ var (
 func main() {
 	verser.SetServiVersRepoRevis(service, version, repository, revisionID)
 	e := echo.New()
-	defaultLogger := logger.NewComponentLogger("main", nil) // logger without context
+	defaultLogger := logger.NewComponentLogger(context.TODO(), "main") // logger without context
 	e.GET("/", func(c echo.Context) error {
 		err := FindUser()
-		c.Set("user", "uuid4-1234")                     // set up user id to have it in logs
-		log := logger.NewComponentLogger("get-func", c) // logger with get request context
+		c.Set("user", "uuid4-1234")                                         // set up user id to have it in logs
+		log := logger.NewComponentLogger(c.Request().Context(), "get-func") // logger with get request context
 		log.Error().Stack().Err(err).Msg("error while getting element")
 		return c.String(http.StatusOK, "Hello, World!")
 	})

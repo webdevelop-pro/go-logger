@@ -34,7 +34,7 @@ func testEchoLogger(t *testing.T, ctx context.Context, expected string, logF fun
 	os.Stdout = w
 
 	os.Setenv("LOG_LEVEL", "info")
-	log := logger.NewComponentLogger("test", ctx)
+	log := logger.NewComponentLogger(ctx, "test")
 
 	logF(log)
 
@@ -48,7 +48,7 @@ func testBaseLogger(t *testing.T, ctx context.Context, expected string, logF fun
 	os.Stdout = w
 
 	os.Setenv("LOG_LEVEL", "info")
-	log := echo_google_cloud.NewComponentLogger("test", ctx)
+	log := echo_google_cloud.NewComponentLogger(ctx, "test")
 
 	logF(log)
 

@@ -8,7 +8,7 @@ require (
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.32.0
-	github.com/webdevelop-pro/go-common v0.0.0-20240429142101-3749f4b6542d
+	github.com/webdevelop-pro/go-common v0.0.0-20240430085022-5f4e309174cb
 	go.uber.org/fx v1.21.1
 )
 

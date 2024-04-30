@@ -137,6 +137,10 @@ github.com/webdevelop-pro/go-common v0.0.0-20240422164805-58de100e154b h1:Gc+CPq
 github.com/webdevelop-pro/go-common v0.0.0-20240422164805-58de100e154b/go.mod h1:WWCQKgxEoutnPqmj3MJnhHSiEcd784GkxcuZtEpC5NM=
 github.com/webdevelop-pro/go-common v0.0.0-20240429142101-3749f4b6542d h1:jwhTdqW6oxrPcn8sVSJkq/fnMupk8PRXkV8RUFqyGL0=
 github.com/webdevelop-pro/go-common v0.0.0-20240429142101-3749f4b6542d/go.mod h1:051aJj6Bk3nYTFyPafSAWWLlWvlM7twZg5DrktBKVEY=
+github.com/webdevelop-pro/go-common v0.0.0-20240430083157-32ea285b6bc9 h1:f7uG0rpQkkyGIuv9zhrFHls0zaqYy+3cCtVC4DAx6pI=
+github.com/webdevelop-pro/go-common v0.0.0-20240430083157-32ea285b6bc9/go.mod h1:051aJj6Bk3nYTFyPafSAWWLlWvlM7twZg5DrktBKVEY=
+github.com/webdevelop-pro/go-common v0.0.0-20240430085022-5f4e309174cb h1:Tj9emYAJ4i9pbtwn8EzMblVJL4ow+Gr7sMBDM9QGYOE=
+github.com/webdevelop-pro/go-common v0.0.0-20240430085022-5f4e309174cb/go.mod h1:r+W2o/LmouOfQ2HLVkkEODweN01y/nglnsYkIUEE3Aw=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 go.opencensus.io v0.24.0 h1:y73uSU6J157QMP2kn2r30vwW1A2W2WFwSCGnAVxeaD0=
 go.opencensus.io v0.24.0/go.mod h1:vNK8G9p7aAivkbmorf4v+7Hgx+Zs0yY+0fOtgBfjQKo=

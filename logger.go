@@ -1,3 +1,4 @@
+//nolint:gochecknoinits, reassign
 package logger
 
 import (
@@ -7,7 +8,6 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/pkgerrors"
-
 	"github.com/webdevelop-pro/go-common/configurator"
 )
 
@@ -21,7 +21,7 @@ func (l Logger) Printf(s string, args ...interface{}) {
 }
 
 // NewLogger return logger instance
-func NewLogger(component string, logLevel string, output io.Writer, c context.Context) Logger {
+func NewLogger(c context.Context, component string, logLevel string, output io.Writer) Logger {
 	level, err := zerolog.ParseLevel(logLevel)
 	if err != nil {
 		level = zerolog.InfoLevel
@@ -55,14 +55,17 @@ func NewLogger(component string, logLevel string, output io.Writer, c context.Co
 }
 
 // DefaultStdoutLogger return default logger instance
-func DefaultStdoutLogger(logLevel string, c context.Context) Logger {
-	return NewLogger("default", logLevel, os.Stdout, c)
+func DefaultStdoutLogger(c context.Context, logLevel string) Logger {
+	return NewLogger(c, "default", logLevel, os.Stdout)
 }
 
 // NewComponentLogger return default logger instance with custom component
-func NewComponentLogger(component string, c context.Context) Logger {
-	conf := configurator.NewConfigurator()
-	cfg := conf.New("logger", &Config{}).(*Config)
+func NewComponentLogger(c context.Context, component string) Logger {
+	cfg := Config{}
+	err := configurator.NewConfiguration(&cfg, "logger")
+	if err != nil {
+		panic(err)
+	}
 
 	var output io.Writer
 	// Beautiful output
@@ -72,5 +75,5 @@ func NewComponentLogger(component string, c context.Context) Logger {
 		output = os.Stdout
 	}
 
-	return NewLogger(component, cfg.LogLevel, output, c)
+	return NewLogger(c, component, cfg.LogLevel, output)
 }

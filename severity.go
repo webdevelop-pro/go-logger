@@ -1,3 +1,4 @@
+//nolint:gochecknoglobals
 package logger
 
 import "github.com/rs/zerolog"

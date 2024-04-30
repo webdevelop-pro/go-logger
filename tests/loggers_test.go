@@ -9,6 +9,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/webdevelop-pro/go-common/context/keys"
 	"github.com/webdevelop-pro/go-common/tests"
 	logger "github.com/webdevelop-pro/go-logger"
 	echo_google_cloud "github.com/webdevelop-pro/go-logger/echo_google_cloud"
@@ -33,13 +34,13 @@ func testEchoLogger(t *testing.T, ctx context.Context, expected string, logF fun
 	os.Stdout = w
 
 	os.Setenv("LOG_LEVEL", "info")
-	log := logger.NewComponentLogger("test", ctx)
+	log := logger.NewComponentLogger(ctx, "test")
 
 	logF(log)
 
 	actual := ReadStdout(r, w)
 
-	tests.CompareJsonBody(t, []byte(actual), []byte(expected))
+	tests.CompareJSONBody(t, []byte(actual), []byte(expected))
 }
 
 func testBaseLogger(t *testing.T, ctx context.Context, expected string, logF func(log logger.Logger)) {
@@ -47,29 +48,29 @@ func testBaseLogger(t *testing.T, ctx context.Context, expected string, logF fun
 	os.Stdout = w
 
 	os.Setenv("LOG_LEVEL", "info")
-	log := echo_google_cloud.NewComponentLogger("test", ctx)
+	log := echo_google_cloud.NewComponentLogger(ctx, "test")
 
 	logF(log)
 
 	actual := ReadStdout(r, w)
 
-	tests.CompareJsonBody(t, []byte(actual), []byte(expected))
+	tests.CompareJSONBody(t, []byte(actual), []byte(expected))
 }
 
 func TestLog_Info(t *testing.T) {
-	ctx := context.WithValue(context.Background(), logger.ServiceContextInfo, logger.ServiceContext{
+	ctx := keys.SetCtxValue(context.Background(), keys.LogInfo, logger.ServiceContext{
 		Service:   "test-service",
 		Version:   "v0.1",
 		User:      "0001",
 		RequestID: "asd-asd-asd",
 		MSGID:     "ttt-tttt-ttt",
-		HttpRequest: &logger.HttpRequestContext{
+		HTTPRequest: &logger.HTTPRequestContext{
 			Method:             "GET",
 			URL:                "/test",
 			UserAgent:          "testagent",
 			Referrer:           "testReferrer",
 			ResponseStatusCode: 200,
-			RemoteIp:           "0.0.0.0",
+			RemoteIP:           "0.0.0.0",
 		},
 	})
 
@@ -117,19 +118,19 @@ func TestLog_Info(t *testing.T) {
 }
 
 func TestLog_ErrorWithoutStack(t *testing.T) {
-	ctx := context.WithValue(context.Background(), logger.ServiceContextInfo, logger.ServiceContext{
+	ctx := keys.SetCtxValue(context.Background(), keys.LogInfo, logger.ServiceContext{
 		Service:   "test-service",
 		Version:   "v0.1",
 		User:      "0001",
 		RequestID: "asd-asd-asd",
 		MSGID:     "ttt-tttt-ttt",
-		HttpRequest: &logger.HttpRequestContext{
+		HTTPRequest: &logger.HTTPRequestContext{
 			Method:             "GET",
 			URL:                "/test",
 			UserAgent:          "testagent",
 			Referrer:           "testReferrer",
 			ResponseStatusCode: 200,
-			RemoteIp:           "0.0.0.0",
+			RemoteIP:           "0.0.0.0",
 		},
 	})
 
@@ -177,19 +178,19 @@ func TestLog_ErrorWithoutStack(t *testing.T) {
 }
 
 func TestLog_ErrorWithStack(t *testing.T) {
-	ctx := context.WithValue(context.Background(), logger.ServiceContextInfo, logger.ServiceContext{
+	ctx := keys.SetCtxValue(context.Background(), keys.LogInfo, logger.ServiceContext{
 		Service:   "test-service",
 		Version:   "v0.1",
 		User:      "0001",
 		RequestID: "asd-asd-asd",
 		MSGID:     "ttt-tttt-ttt",
-		HttpRequest: &logger.HttpRequestContext{
+		HTTPRequest: &logger.HTTPRequestContext{
 			Method:             "GET",
 			URL:                "/test",
 			UserAgent:          "testagent",
 			Referrer:           "testReferrer",
 			ResponseStatusCode: 200,
-			RemoteIp:           "0.0.0.0",
+			RemoteIP:           "0.0.0.0",
 		},
 	})
 
@@ -202,7 +203,7 @@ func TestLog_ErrorWithStack(t *testing.T) {
 			"stack": [
 				{
 					"func": "TestLog_ErrorWithStack",
-					"line": "196",
+					"line": "197",
 					"source": "loggers_test.go"
 				},
 				{
